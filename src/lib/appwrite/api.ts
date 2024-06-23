@@ -52,15 +52,29 @@ export async function saveUserToDB(user: {
 
 }
 
-export async function signInAccount(user: { email: string; password: string; }){
+export async function signInAccount(user: { email: string; password: string }) {
+  try {
+    // Check for an active session
+    const existingSession = await account.getSession('current');
+    
+    if (existingSession) {
+      console.log('Active session found, logging out...');
+      await account.deleteSession('current');
+    }
+  } catch (error) {
+    // If no active session, this will throw an error, which we can ignore
+    console.log('No active session found, proceeding to sign in...');
+  }
+
   try {
     const session = await account.createEmailPasswordSession(user.email, user.password);
-
     return session;
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw error;  // Optionally re-throw the error to be handled by the caller
   }
 }
+
 
 export async function getCurrentUser(){
   try {
