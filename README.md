@@ -1,4 +1,5 @@
 Project Status: Paused
+
 This project has been paused due to a shift in priorities.
 
 # React + TypeScript + Vite
